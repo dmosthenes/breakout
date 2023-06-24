@@ -27,6 +27,10 @@ require 'src/LevelMaker'
 -- the rectangular entity the player controls, which deflects the ball
 require 'src/Paddle'
 
+-- the object which falls from the top of the screen, creating two balls if it 
+-- collides with paddle
+require 'src/Powerup'
+
 -- a basic StateMachine class which will allow us to transition to and from
 -- game states smoothly and avoid monolithic code in one file
 require 'src/StateMachine'

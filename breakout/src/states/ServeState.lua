@@ -16,6 +16,7 @@
 
 ServeState = Class{__includes = BaseState}
 
+
 function ServeState:enter(params)
     -- grab game state from params
     self.paddle = params.paddle
@@ -26,9 +27,15 @@ function ServeState:enter(params)
     self.level = params.level
     self.recoverPoints = params.recoverPoints
 
+    -- grab powerup from paddle-select or victory state
+    self.powerup = params.powerup
+
     -- init new ball (random color for fun)
     self.ball = Ball()
     self.ball.skin = math.random(7)
+
+    -- -- init new powerup
+    -- self.powerup = Powerup()
 end
 
 function ServeState:update(dt)
@@ -47,7 +54,14 @@ function ServeState:update(dt)
             highScores = self.highScores,
             ball = self.ball,
             level = self.level,
-            recoverPoints = self.recoverPoints
+            recoverPoints = self.recoverPoints,
+
+            -- pass the initialised powerup to the play state
+            -- (hopefully persistent across multiple serves)
+            powerup = self.powerup,
+            
+            extraOne = nil,
+            extraTwo = nil
         })
     end
 
