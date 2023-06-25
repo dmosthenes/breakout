@@ -42,8 +42,11 @@ function PlayState:enter(params)
     self.extraOne = params.extraOne
     self.extraTwo = params.extraTwo
 
+    -- increment size according to separate score counter
+    self.growScore = 0
+
     -- debug flag
-    self.printOne = false
+    -- self.printOne = false
 end
 
 
@@ -82,6 +85,9 @@ function updateBrickCollision(self, ball)
 
             -- add to score
             self.score = self.score + (brick.tier * 200 + brick.color * 25)
+
+            -- copy to grow score
+            self.growScore = self.growScore + (brick.tier * 200 + brick.color * 25)
 
             -- trigger the brick's hit function, which removes it from play
             brick:hit()
@@ -163,6 +169,12 @@ function updateBrickCollision(self, ball)
         end
     end
 
+    -- grow paddle if growScore is sufficiently high
+    if self.growScore >= 500 then
+        self.paddle:grow()
+        self.growScore = 0
+    end
+
 end
 
 function gameOver(self)
@@ -175,8 +187,11 @@ function gameOver(self)
             highScores = self.highScores
         })
     else
-        self.printOne = false
+        -- self.printOne = false
+        -- shrink paddle
+        self.paddle:shrink()
         gStateMachine:change('serve', {
+            -- paddle = self.paddle:shrink(),
             paddle = self.paddle,
             bricks = self.bricks,
             health = self.health,
@@ -195,6 +210,16 @@ function gameOver(self)
 
     self.extraOne = nil
     self.extraTwo = nil
+
+end
+
+function initNewBall(ball)
+    ball = Ball()
+    ball:reset()
+    ball.skin = math.random(7)
+    ball.dx = math.random(-200, 200)
+    ball.dy = math.random(-50, -60)
+    return ball
 
 end
 
@@ -224,8 +249,6 @@ function PlayState:update(dt)
 
     end
 
-
-
     updatePaddleCollision(self.ball, self.paddle)
 
     -- if extra balls are spawned, also check their collisions
@@ -239,16 +262,9 @@ function PlayState:update(dt)
         self.powerup.inPlay = false
 
         -- generate two additional balls
-        self.extraOne = Ball()
-        self.extraOne:reset()
-        self.extraOne.skin = math.random(7)
-        self.extraOne.dx = math.random(-200, 200)
-        self.extraOne.dy = math.random(-50, -60)
-        self.extraTwo = Ball()
-        self.extraTwo:reset()
-        self.extraTwo.skin = math.random(7)
-        self.extraTwo.dx = math.random(-200, 200)
-        self.extraTwo.dy = math.random(-50, -60)
+        self.extraOne = initNewBall(self.extraOne)
+        self.extraTwo = initNewBall(self.extraTwo)
+
 
         -- cheap way to fix a bug whereby additional balls would spawn at the start of each new
         -- serve state because powerup was detected again to be colliding with the Paddle

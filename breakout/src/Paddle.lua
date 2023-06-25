@@ -40,6 +40,7 @@ function Paddle:init(skin)
     -- the variant is which of the four paddle sizes we currently are; 2
     -- is the starting size, as the smallest is too tough to start with
     self.size = 2
+
 end
 
 function Paddle:update(dt)
@@ -65,6 +66,32 @@ function Paddle:update(dt)
     else
         self.x = math.min(VIRTUAL_WIDTH - self.width, self.x + self.dx * dt)
     end
+end
+
+function Paddle:shrink()
+    if self.size > 1 then
+        self.size = self.size - 1
+        self:changeWidth()
+    end
+end
+
+function Paddle:grow()
+    if self.size < 4 then
+        self.size = self.size + 1
+        self:changeWidth()
+    end
+end
+
+function Paddle:changeWidth()
+    if self.size == 1 then
+        self.width = 64/2
+    elseif self.size == 2 then
+        self.width = 128/2
+    elseif self.size == 3 then
+        self.width = 192/2
+    elseif self.size == 4 then
+        self.width = 256/2
+    end    
 end
 
 --[[

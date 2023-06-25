@@ -35,13 +35,15 @@ function Powerup:update(dt)
 end
 
 function Powerup:collides(target)
+
+    
     -- check if left edge of either is further to the right than the right edge of the other
-    if self.x > target.x + target.width / 2 or target.y > self.y + self.width / 2 then
+    if self.x > target.x + target.width or target.x > self.x + self.width then
         return false
     end
 
     -- check if top of each is below the bottom of the other
-    if self.y > target.y + target.height / 2 or target.y > self.y + self.height / 2 then
+    if self.y > target.y + target.height or target.y > self.y + self.height then
         return false
     end
 
