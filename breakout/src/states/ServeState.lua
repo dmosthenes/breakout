@@ -34,8 +34,21 @@ function ServeState:enter(params)
     self.ball = Ball()
     self.ball.skin = math.random(7)
 
-    -- -- init new powerup
-    -- self.powerup = Powerup()
+    -- init new key powerup if key brick exists
+    self.keyUp = isKeyBrick(self.bricks)
+    -- print(self.keyUp)
+end
+
+function isKeyBrick(bricks)
+    for _, brick in pairs(bricks) do
+        if brick.keyBrick and brick.inPlay then
+            keyUp = Powerup()
+            keyUp:setKey()
+            -- print(keyUp)
+            return keyUp
+        end
+    end
+    return nil
 end
 
 function ServeState:update(dt)
@@ -61,7 +74,9 @@ function ServeState:update(dt)
             powerup = self.powerup,
             
             extraOne = nil,
-            extraTwo = nil
+            extraTwo = nil,
+
+            keyUp = self.keyUp
         })
     end
 

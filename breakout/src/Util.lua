@@ -133,3 +133,22 @@ function GeneratePowerup(atlas)
     return love.graphics.newQuad(x, y, 16, 16, atlas:getDimensions())
 
 end
+
+function GenerateKeyItems(atlas)
+
+    -- return love.graphics.newQuad(160, 48, 32, 16, atlas:getDimensions())
+
+
+    -- return love.graphics.newQuad(320, 96, 64, 34, atlas:getDimensions())
+
+    items = {}
+
+    -- add key brick
+    items[1] = love.graphics.newQuad(160, 48, 32, 16, atlas:getDimensions())
+
+    -- add key powerup
+    items[2] = love.graphics.newQuad(144, 192, 160, 208, atlas:getDimensions())
+
+    return items
+
+end

@@ -18,6 +18,7 @@ function Powerup:init()
     self.height = 16
     self.inPlay = false
     self.spawnTimer = math.random(10,25)
+    self.keyPowerUp = false
 end
 
 function Powerup:update(dt)
@@ -34,9 +35,11 @@ function Powerup:update(dt)
     end
 end
 
-function Powerup:collides(target)
+function Powerup:setKey()
+    self.keyPowerUp = true
+end
 
-    
+function Powerup:collides(target)    
     -- check if left edge of either is further to the right than the right edge of the other
     if self.x > target.x + target.width or target.x > self.x + self.width then
         return false
@@ -53,11 +56,17 @@ function Powerup:collides(target)
 end
 
 function Powerup:render()
-    if self.inPlay then
+    if self.inPlay and not self.keyPowerUp then
         love.graphics.draw(gTextures['main'], 
             -- multiply color by 4 (-1) to get our color offset, then add tier to that
             -- to draw the correct tier and color brick onto the screen
             GeneratePowerup(gTextures['main']),
             self.x, self.y)
+    else
+        if self.inPlay then
+            love.graphics.draw(gTextures['main'],
+            GenerateKeyItems(gTextures['main'])[2],
+            self.x, self.y)
+        end
     end
 end

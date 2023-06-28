@@ -123,6 +123,12 @@ function LevelMaker.createMap(level)
     if #bricks == 0 then
         return self.createMap(level)
     else
+        -- replace one of the bricks with a keybrick (fifty-fifty)
+        if os.time() % 2 == 0 then
+            -- select a random brick in the table
+            local pos = math.random(0, #bricks)
+            bricks[pos]:setKey()
+        end
         return bricks
     end
 end

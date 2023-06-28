@@ -52,7 +52,7 @@ function Ball:collides(target)
 end
 
 --[[
-    Places the ball in the middle of the screen, with no movement.
+    Places the ball in the middl`e of the screen, with no movement.
 ]]
 function Ball:reset()
     self.x = VIRTUAL_WIDTH / 2 - 2

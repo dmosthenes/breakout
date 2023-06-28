@@ -45,10 +45,24 @@ function PlayState:enter(params)
     -- increment size according to separate score counter
     self.growScore = 0
 
+    -- get key-up if it exists
+    self.keyUp = params.keyUp
+    self.gotKey = false
+    -- print(self.keyUp)
+
     -- debug flag
     -- self.printOne = false
 end
 
+-- function isKeyBrick(bricks)
+--     for _, brick in pairs(bricks) do
+--         if brick.keyBrick then
+--             print('true')
+--             return true
+--         end
+--     end
+--     return false
+-- end
 
 -- util function for checking collision between given ball and paddle
 function updatePaddleCollision(ball, paddle)
@@ -90,7 +104,13 @@ function updateBrickCollision(self, ball)
             self.growScore = self.growScore + (brick.tier * 200 + brick.color * 25)
 
             -- trigger the brick's hit function, which removes it from play
-            brick:hit()
+            if not brick.keyBrick then
+                brick:hit()
+            else
+                if self.gotKey then
+                    brick:hit()
+                end
+            end
 
             -- if we have enough points, recover a point of health
             if self.score > self.recoverPoints then
@@ -242,6 +262,13 @@ function PlayState:update(dt)
     self.ball:update(dt)
     self.powerup:update(dt)
 
+    -- update position of keyUp powerup if it exists
+    -- print(self.keyUp)
+    if self.keyUp ~= nil then
+        -- print(self.keyUp)
+        self.keyUp:update(dt)
+    end
+
     -- update positions of extra balls once spawned
     if self.extraOne ~= nil then
         self.extraOne:update(dt)
@@ -271,6 +298,11 @@ function PlayState:update(dt)
         -- fix this properly later
         self.powerup.y = VIRTUAL_HEIGHT - 10
 
+    end
+
+    if self.keyUp ~= nil and self.keyUp:collides(self.paddle) then
+        self.keyUp = nil
+        self.gotKey = true
     end
 
     updateBrickCollision(self, self.ball)
@@ -328,6 +360,13 @@ function PlayState:render()
 
     -- render power-up
     self.powerup:render()
+
+    -- render key-up
+    -- print(self.keyUp)
+    if self.keyUp ~= nil then
+        self.keyUp:render()
+        -- print('true')
+    end
 
     -- render extra balls once spawned
     if self.extraOne ~= nil then
